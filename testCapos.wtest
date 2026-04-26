@@ -1,0 +1,95 @@
+import capos.*
+
+describe "Test rolando" {
+  test "Test rolando recogiendo artefactos" {
+    rolando.capacidadMochila(2)
+    rolando.llevarArtefacto(libroDeHechizos)
+    rolando.llevarArtefacto(espadaDelDestino)
+    assert.equals(2, rolando.artefactosEnTotal().size())
+    assert.that(rolando.artefactosEnTotal().contains(espadaDelDestino))
+    assert.that(rolando.artefactosEnTotal().contains(libroDeHechizos))
+    rolando.llevarArtefacto(collarDivino)
+    assert.notThat(rolando.artefactosEnTotal().contains(collarDivino))
+  }
+  test "Castillo de piedra" { 
+    rolando.llevarArtefacto(espadaDelDestino)
+    rolando.llevarArtefacto(libroDeHechizos)
+    rolando.llevarA(castillo)
+    assert.that(castillo.inventario().contains(espadaDelDestino))
+    assert.that(castillo.inventario().contains(libroDeHechizos))
+    rolando.llevarArtefacto(collarDivino)
+    rolando.llevarA(castillo)
+    assert.that(castillo.inventario().contains(collarDivino))
+  }
+  test "Historial de artefactos de rolando" {
+    rolando.capacidadMochila(2)
+    rolando.llevarArtefacto(espadaDelDestino)
+    rolando.llevarArtefacto(libroDeHechizos)
+    rolando.llevarArtefacto(collarDivino)
+    rolando.llevarA(castillo)
+    rolando.llevarArtefacto(armadura)
+    rolando.llevarArtefacto(collarDivino)
+    assert.equals(5, rolando.historialDeRecoleccion().size()) 
+  }
+}
+describe "Test de batalla" {
+  test "Comportamiento de artefactos" {
+       rolando.poderBase(5) 
+        rolando.capacidadMochila(3)
+        rolando.llevarArtefacto(espadaDelDestino)
+        rolando.llevarArtefacto(armadura)
+        rolando.llevarArtefacto(collarDivino)
+        assert.equals(5, espadaDelDestino.poderQueAporta(rolando))
+        assert.equals(6, armadura.poderQueAporta(rolando))
+        assert.equals(3, collarDivino.poderQueAporta(rolando))
+        rolando.pelearBatalla()
+        assert.equals(6, rolando.poderBase())
+        assert.equals(3, espadaDelDestino.poderQueAporta(rolando))
+        assert.equals(6, armadura.poderQueAporta(rolando))
+        assert.equals(3, collarDivino.poderQueAporta(rolando))
+        rolando.pelearBatalla()
+        assert.equals(7, rolando.poderBase())
+        assert.equals(3.5, espadaDelDestino.poderQueAporta(rolando))
+        assert.equals(6, armadura.poderQueAporta(rolando))
+        assert.equals(5, collarDivino.poderQueAporta(rolando))
+        rolando.pelearBatalla() 
+        assert.equals(8, rolando.poderBase())
+        assert.equals(4, espadaDelDestino.poderQueAporta(rolando))
+        assert.equals(6, armadura.poderQueAporta(rolando))
+        assert.equals(6, collarDivino.poderQueAporta(rolando))
+
+    }
+}
+describe "Test libro de hechizos" {
+  test "Pelea con libro de hechizos " {
+    rolando.poderBase(5) 
+    rolando.llevarArtefacto(espadaDelDestino)
+    rolando.llevarArtefacto(armadura)
+    rolando.llevarArtefacto(collarDivino)
+    rolando.llevarA(castillo)
+    rolando.llevarArtefacto(libroDeHechizos)
+    libroDeHechizos.añadirHechizo(bendicion)
+    libroDeHechizos.añadirHechizo(invisibilidad)
+    libroDeHechizos.añadirHechizo(invocacion)
+    assert.equals(4, libroDeHechizos.poderQueAporta(rolando))
+    rolando.pelearBatalla()
+    assert.equals(6, libroDeHechizos.poderQueAporta(rolando))
+    rolando.pelearBatalla()
+    assert.equals(7, libroDeHechizos.poderQueAporta(rolando))
+    rolando.pelearBatalla()
+    assert.equals(0, libroDeHechizos.poderQueAporta(rolando))
+    }
+  }
+  describe "Test enemigos de rolando" { 
+
+    test "Rolando pelea" {
+    rolando.poderBase(5)
+    rolando.capacidadMochila(3)
+    rolando.llevarArtefacto(espadaDelDestino)
+    rolando.llevarArtefacto(armadura)
+    rolando.llevarArtefacto(collarDivino)
+    assert.equals(19, rolando.poderTotal())
+    assert.equals([archibaldo, astra], rolando.puedeVencer([caterina,archibaldo,astra]))
+    assert.equals([palacioDeMarmol, torreDeMarfil], rolando.apoderarseDeMorada([caterina,archibaldo,astra]))
+  }
+}
